@@ -17,13 +17,14 @@ export async function createNewUser(req, res) {
 }
 
 export async function signIn(req, res) {
+    const { username, password } = req.body;
     const user = await prisma.user.findUnique({
         where: {
-            username: req.body.username
+            username: username
         }
     })
 
-    const isValid = await comparePasswords(req.body.password, user.password);
+    const isValid = await comparePasswords(password, user.password);
 
     if (!isValid) {
         res.status(401);
