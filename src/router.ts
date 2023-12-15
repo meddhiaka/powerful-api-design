@@ -1,29 +1,19 @@
 import {Router} from "express";
+import { body, validationResult } from "express-validator";
+import { getProducts, getOneProduct, updateProduct, deleteProduct, createProduct } from "./handlers/product";
 
 const router = Router();
 
-function middle1(req, res, next) {
-    res.json({msg: "middle1"})
-    next();
-}
-
-function middle2(req, res, next) {
-    res.json({msg: "middle2"});
-    next();
-}
-
 // product
-router.get("/product", [middle1, middle2], (req, res) => {
-    
-});
+router.get("/product", getProducts);
 
-router.get("/product/:id", () => {});
+router.get("/product/:id", getOneProduct);
 
-router.put("/product/:id", () => {});
+router.put("/product/:id", updateProduct);
 
-router.post("/product", () => {});
+router.post("/product", createProduct);
 
-router.delete("/product/:id", () => {});
+router.delete("/product/:id", deleteProduct);
 
 
 // update
@@ -33,7 +23,13 @@ router.get("/update", (req, res) => {
 
 router.get("/update/:id", () => {});
 
-router.put("/update/:id", () => {});
+router.put("/update/:id", body("name").isString(), (req, res) => {
+    const errors = validationResult(req);
+    res.status(200).json({errors: errors.array()});
+    if(!errors.isEmpty()) {
+        res.status(400).json({errors: errors.array()});
+    }
+});
 
 router.post("/update", () => {});
 
