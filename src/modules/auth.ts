@@ -24,19 +24,17 @@ export function createJWT(user) {
 export function protect(req, res, next) {
     const bearer = req.headers.authorization;
     if (!bearer) {
-        res.status(401); //unauthorized
-        res.json({
+        res.status(401).json({
             message: "bearer is null\n not authorized"
-        })
+        }) //unauthorized
         return;
     }
 
-    const token = bearer.split(" ").slice(1)[0]; // wow ;)
+    const token = bearer.split(" ")[1];
     if(!token) {
-        res.json({
+        res.status(401).json({
             message: "no token\n not authorized"
-        })
-        res.status(401); //unauthorized
+        }); //unauthorized
         return;
     }
 
@@ -48,10 +46,9 @@ export function protect(req, res, next) {
         next();
     } catch(e) {
         console.error(e);
-        res.status(401); //unauthorized
-        res.json({
+        res.status(401).json({
             message: "no user\n not authorized"
-        })
+        }); //unauthorized
         return;
     }
 }
