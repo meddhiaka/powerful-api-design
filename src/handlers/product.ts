@@ -2,7 +2,7 @@ import prisma from "../modules/db";
 
 // get all of a unique user X :)
 export async function getProducts(req, res) {
-    const resProducts = await prisma.user.findUnique({
+    const result = await prisma.user.findUnique({
         where: {
             id: req.user.id
         },
@@ -11,8 +11,14 @@ export async function getProducts(req, res) {
         }
     })
     
+    if (!result) {
+        res.status(404).json({
+            message: "no products found"
+        })
+    }
+
     res.json({
-        resData: resProducts.products
+        products: result.products
     })
 }
 
